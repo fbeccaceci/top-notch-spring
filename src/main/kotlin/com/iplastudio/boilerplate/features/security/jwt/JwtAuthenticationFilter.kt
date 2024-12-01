@@ -2,12 +2,11 @@ package com.iplastudio.boilerplate.features.security.jwt
 
 import com.iplastudio.boilerplate.features.security.AuthenticationDetails
 import jakarta.servlet.FilterChain
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -24,7 +23,9 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val token = request.getParameter("auth") ?: extractTokenFromHeader(request)
+        val token = request.getParameter("auth")
+            ?: extractTokenFromHeader(request)
+            ?: getCookieValue(request, "auth")
 
         if (token == null || SecurityContextHolder.getContext().authentication != null) {
             filterChain.doFilter(request, response);
@@ -54,6 +55,18 @@ class JwtAuthenticationFilter(
         if (authHeader == null || !authHeader.startsWith("Bearer ")) return null
 
         return authHeader.substring("Bearer ".length)
+    }
+
+    fun getCookieValue(request: HttpServletRequest, cookieName: String?): String? {
+        val cookies: Array<Cookie>? = request.cookies
+        if (cookies != null) {
+            for (cookie in cookies) {
+                if (cookie.name.equals(cookieName)) {
+                    return cookie.value
+                }
+            }
+        }
+        return null // Cookie not found
     }
 
 }
