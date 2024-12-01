@@ -1,9 +1,6 @@
 package com.iplastudio.boilerplate.features.users
 
-import com.iplastudio.boilerplate.features.users.dtos.RefreshTokenRequest
-import com.iplastudio.boilerplate.features.users.dtos.UserAuthenticationResponse
-import com.iplastudio.boilerplate.features.users.dtos.UserRegistrationRequest
-import com.iplastudio.boilerplate.features.users.dtos.UsernameAndPasswordLoginRequest
+import com.iplastudio.boilerplate.features.users.dtos.*
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userService: UserService,
     private val userAccountActivationService: UserAccountActivationService,
+    private val userPasswordResetService: UserPasswordResetService
 ) {
 
     @PostMapping("/sign-up")
@@ -33,5 +31,11 @@ class UserController(
 
     @GetMapping("/me")
     fun me(): User = userService.getLoggedUserOrThrow()
+
+    @PutMapping("/request-reset-password")
+    fun requestResetPassword(@Valid @RequestBody request: ResetPasswordRequest) = userPasswordResetService.requestPasswordReset(request)
+
+    @PutMapping("/reset-password")
+    fun resetPassword(@Valid @RequestBody request: ConfirmPasswordResetRequest) = userPasswordResetService.confirmPasswordReset(request)
 
 }

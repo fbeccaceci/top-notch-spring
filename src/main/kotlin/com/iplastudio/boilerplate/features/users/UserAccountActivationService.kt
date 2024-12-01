@@ -5,16 +5,28 @@ import com.iplastudio.boilerplate.features.emails.EmailService
 import com.iplastudio.boilerplate.features.emails.models.TemplatedEmail
 import com.iplastudio.boilerplate.features.users.exceptions.UserAlreadyActiveException
 import com.iplastudio.boilerplate.utils.TokenGenerator
+import com.iplastudio.boilerplate.utils.plusMillis
 import org.slf4j.LoggerFactory
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
+@ConfigurationProperties("app.users.account-activation")
+data class SignupProperties(
+    /*
+        The time in milliseconds after which the otp will expire
+     */
+    val otpExpirationTime: Long
+)
+
+
 @Service
 class UserAccountActivationService(
     private val emailService: EmailService,
-    private val userOtpRepository: UserOtpRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userOtpService: UserOtpService,
+    private val properties: SignupProperties
 ) {
 
     private val log = LoggerFactory.getLogger(UserAccountActivationService::class.java)
@@ -26,21 +38,12 @@ class UserAccountActivationService(
 
         log.info("Beginning account activation for ${user.username}")
 
-        userOtpRepository.findByUserIdAndTypeAndStatus(
-            user.id!!,
-            UserOtp.Type.ACCOUNT_ACTIVATION,
-            UserOtp.Status.VALID
-        )?.let {
-            it.status = UserOtp.Status.REPLACED
-            userOtpRepository.save(it)
-        }
-
-        val otp = userOtpRepository.save(
+        val otp = userOtpService.saveAndReplace(
             UserOtp(
                 userId = user.id!!,
                 type = UserOtp.Type.ACCOUNT_ACTIVATION,
-                status = UserOtp.Status.VALID,
                 otpCode = TokenGenerator.otpCode(),
+                expiresAt = LocalDateTime.now().plusMillis(properties.otpExpirationTime)
             )
         )
 
@@ -55,14 +58,7 @@ class UserAccountActivationService(
     }
 
     fun activateAccount(otp: String) {
-        val userOtp = userOtpRepository.findByOtpCodeAndTypeAndStatus(
-            otp,
-            UserOtp.Type.ACCOUNT_ACTIVATION,
-            UserOtp.Status.VALID
-        ) ?: throw EntityNotFoundException(UserOtp::class)
-
-        userOtp.status = UserOtp.Status.USED
-        userOtpRepository.save(userOtp)
+        val userOtp = userOtpService.consume(otp, UserOtp.Type.ACCOUNT_ACTIVATION)
 
         val user = userRepository.findByIdOrNull(userOtp.userId)
             ?: throw EntityNotFoundException(User::class)

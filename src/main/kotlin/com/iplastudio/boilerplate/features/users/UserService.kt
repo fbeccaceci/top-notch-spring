@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
+
 @Service
 class UserService(
     private val userRepository: UserRepository,
@@ -58,7 +59,7 @@ class UserService(
         // We check first for the password match, and then for the user active status so in the login flow
         // If the client gets a user not enabled error, it can prompt the user to insert the otp and enable the account
         // If we check first for the activation status, the client will prompt the user to insert the otp and enable the account
-        // Event if the password is wrong, the user will be able to login with the otp
+        // Event if the password is wrong, the user will be able to log in with the otp
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw PasswordDontMatchException()
         }

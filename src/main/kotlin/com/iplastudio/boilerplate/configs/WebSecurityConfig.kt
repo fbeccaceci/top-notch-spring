@@ -30,6 +30,8 @@ class WebSecurityConfig(
                     "/users/sign-up",
                     "/users/activate-account",
                     "/users/login",
+                    "/users/reset-password",
+                    "/users/request-reset-password"
                 ).permitAll()
 
                 requests.anyRequest().authenticated()
