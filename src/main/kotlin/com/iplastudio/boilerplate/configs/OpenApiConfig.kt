@@ -1,6 +1,5 @@
 package com.iplastudio.boilerplate.configs
 
-import com.fasterxml.jackson.databind.Module
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.security.SecurityRequirement
@@ -38,23 +37,14 @@ class OpenApiConfig {
      * @return provider for spring doc generation
      */
     @Bean
-    fun springdocObjectMapperProvider(springDocConfigProperties: SpringDocConfigProperties?): ObjectMapperProvider {
+    fun springdocObjectMapperProvider(
+        springDocConfigProperties: SpringDocConfigProperties?,
+        jsonNullableModule: JsonNullableModule): ObjectMapperProvider {
         val objectMapperProvider = ObjectMapperProvider(springDocConfigProperties)
-        objectMapperProvider.jsonMapper().registerModule(jsonNullableModule())
+
+        objectMapperProvider.jsonMapper().registerModule(jsonNullableModule)
+
         return objectMapperProvider
-    }
-
-
-    /**
-     * Register JsonNullableModule for openapi generation in springdoc (above) and for the default object mapper
-     * used to serialize/deserialize JSON Payloads via web requests - otherwise the application is not able to map
-     * JsonNullable<Type> fields
-     *
-     * @return json nullable module
-    </Type> */
-    @Bean
-    fun jsonNullableModule(): Module {
-        return JsonNullableModule()
     }
 
 }
