@@ -8,6 +8,9 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -55,5 +58,15 @@ class WebSecurityConfig(
     fun roleHierarchy(): RoleHierarchy = RoleHierarchyImpl.fromHierarchy(
         "ROLE_ADMIN > ROLE_USER",
     )
+
+    @Bean
+    fun userDetailsService(passwordEncoder: PasswordEncoder): InMemoryUserDetailsManager {
+        /**
+         * Although this seems like useless code, it's required to prevent Spring Boot autoconfiguration
+         * and creation of default user with default password.
+         * (Disable the log of a random generated password at startup)
+         */
+        return InMemoryUserDetailsManager()
+    }
 
 }
