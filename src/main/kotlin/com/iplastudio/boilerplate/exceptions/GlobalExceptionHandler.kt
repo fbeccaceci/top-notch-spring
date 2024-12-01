@@ -6,6 +6,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -87,4 +88,14 @@ class GlobalExceptionHandler {
         return ResponseEntity(error, HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler
+    fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ApiError> {
+        val error = ApiError(
+            error = "access-denied",
+            message = "You don't have the required privileges to access denied",
+            details = "You don't have the required privileges to access denied"
+        )
+
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
 }

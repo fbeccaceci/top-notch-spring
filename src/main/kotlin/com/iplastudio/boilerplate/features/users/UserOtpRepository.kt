@@ -1,5 +1,6 @@
 package com.iplastudio.boilerplate.features.users
 
+import com.iplastudio.boilerplate.features.users.entities.UserOtp
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*

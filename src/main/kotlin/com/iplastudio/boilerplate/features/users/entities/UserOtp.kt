@@ -1,4 +1,4 @@
-package com.iplastudio.boilerplate.features.users
+package com.iplastudio.boilerplate.features.users.entities
 
 import jakarta.persistence.*
 import java.time.LocalDateTime

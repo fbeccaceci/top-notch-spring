@@ -5,6 +5,8 @@ import com.iplastudio.boilerplate.features.emails.EmailService
 import com.iplastudio.boilerplate.features.emails.models.TemplatedEmail
 import com.iplastudio.boilerplate.features.users.dtos.ConfirmPasswordResetRequest
 import com.iplastudio.boilerplate.features.users.dtos.ResetPasswordRequest
+import com.iplastudio.boilerplate.features.users.entities.User
+import com.iplastudio.boilerplate.features.users.entities.UserOtp
 import com.iplastudio.boilerplate.features.users.exceptions.UserNotEnabledException
 import com.iplastudio.boilerplate.utils.TokenGenerator
 import com.iplastudio.boilerplate.utils.plusMillis

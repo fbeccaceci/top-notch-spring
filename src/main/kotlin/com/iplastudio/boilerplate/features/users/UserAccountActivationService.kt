@@ -3,6 +3,8 @@ package com.iplastudio.boilerplate.features.users
 import com.iplastudio.boilerplate.exceptions.EntityNotFoundException
 import com.iplastudio.boilerplate.features.emails.EmailService
 import com.iplastudio.boilerplate.features.emails.models.TemplatedEmail
+import com.iplastudio.boilerplate.features.users.entities.User
+import com.iplastudio.boilerplate.features.users.entities.UserOtp
 import com.iplastudio.boilerplate.features.users.exceptions.UserAlreadyActiveException
 import com.iplastudio.boilerplate.utils.TokenGenerator
 import com.iplastudio.boilerplate.utils.plusMillis

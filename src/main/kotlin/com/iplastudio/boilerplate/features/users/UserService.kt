@@ -10,6 +10,7 @@ import com.iplastudio.boilerplate.features.users.dtos.RefreshTokenRequest
 import com.iplastudio.boilerplate.features.users.dtos.UserAuthenticationResponse
 import com.iplastudio.boilerplate.features.users.dtos.UserRegistrationRequest
 import com.iplastudio.boilerplate.features.users.dtos.UsernameAndPasswordLoginRequest
+import com.iplastudio.boilerplate.features.users.entities.User
 import com.iplastudio.boilerplate.features.users.exceptions.PasswordDontMatchException
 import com.iplastudio.boilerplate.features.users.exceptions.TokenRefreshFailedException
 import com.iplastudio.boilerplate.features.users.exceptions.UserNotEnabledException

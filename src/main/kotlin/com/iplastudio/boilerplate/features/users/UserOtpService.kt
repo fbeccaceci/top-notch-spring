@@ -1,6 +1,7 @@
 package com.iplastudio.boilerplate.features.users
 
 import com.iplastudio.boilerplate.exceptions.EntityNotFoundException
+import com.iplastudio.boilerplate.features.users.entities.UserOtp
 import com.iplastudio.boilerplate.features.users.exceptions.OtpExpiredException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

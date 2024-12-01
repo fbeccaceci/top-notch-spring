@@ -3,12 +3,17 @@ package com.iplastudio.boilerplate.configs
 import com.iplastudio.boilerplate.features.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
@@ -44,5 +49,11 @@ class WebSecurityConfig(
 
         return http.build();
     }
+
+
+    @Bean
+    fun roleHierarchy(): RoleHierarchy = RoleHierarchyImpl.fromHierarchy(
+        "ROLE_ADMIN > ROLE_USER",
+    )
 
 }
