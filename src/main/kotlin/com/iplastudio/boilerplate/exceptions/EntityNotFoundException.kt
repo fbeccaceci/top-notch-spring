@@ -1,6 +1,5 @@
 package com.iplastudio.boilerplate.exceptions
 
-import com.iplastudio.boilerplate.exceptions.AppException
 import org.springframework.http.HttpStatus
 import kotlin.reflect.KClass
 
