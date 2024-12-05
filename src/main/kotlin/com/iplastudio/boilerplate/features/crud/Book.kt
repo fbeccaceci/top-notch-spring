@@ -1,6 +1,7 @@
 package com.iplastudio.boilerplate.features.crud
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.iplastudio.boilerplate.features.auditing.Auditable
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
@@ -15,4 +16,4 @@ class Book(
     @GeneratedValue
     @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     override var id: UUID? = null
-) : CrudManagedEntity<UUID>
+) : Auditable(), CrudManagedEntity<UUID>

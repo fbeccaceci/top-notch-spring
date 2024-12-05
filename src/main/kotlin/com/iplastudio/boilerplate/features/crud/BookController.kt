@@ -26,7 +26,7 @@ final class BookCrudController(bookRepository: BookRepository) {
     }
 
     @GetMapping
-    fun getAll(@SortDefault(sort = ["name"]) @PageableDefault(size = 20) @ParameterObject pageable: Pageable): Page<Book>
+    fun getAll(@SortDefault(sort = ["createdAt,DESC"]) @PageableDefault(size = 20) @ParameterObject pageable: Pageable): Page<Book>
     = bookCrudManager.getAll(pageable)
 
     @GetMapping("/{id}")
