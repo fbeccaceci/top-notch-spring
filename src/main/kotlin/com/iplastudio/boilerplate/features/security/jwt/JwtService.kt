@@ -19,7 +19,7 @@ class JwtService(private val jwtProperties: JwtProperties) {
         return Jwts.builder()
             .subject(user.username)
             .expiration(Date(System.currentTimeMillis() + jwtProperties.expirationTime))
-            .claim("user-id", user.id!!)
+            .claim("userId", user.id!!)
             .claim("roles", user.rolesString)
             .claim("privileges", user.privilegesString)
             .signWith(getSigningKey())
@@ -35,6 +35,10 @@ class JwtService(private val jwtProperties: JwtProperties) {
         return extractClaims(token).subject
     }
 
+    fun extractUserId(token: String): UUID {
+        return UUID.fromString(extractClaims(token)["userId"].toString())
+    }
+
     fun extractClaims(token: String): Claims {
         return Jwts.parser()
             .verifyWith(getSigningKey())
@@ -45,10 +49,14 @@ class JwtService(private val jwtProperties: JwtProperties) {
 
     fun extractGrantedAuthorities(token: String): Collection<GrantedAuthority> {
         val stringRoles = extractClaims(token).get("roles", String::class.java)
-        val rolesArray = stringRoles?.split(",")?.map { SimpleGrantedAuthority("ROLE_$it") } ?: emptyList()
+        val rolesArray = if (stringRoles.isNotBlank())
+            stringRoles?.split(",")?.map { SimpleGrantedAuthority("ROLE_$it") } ?: emptyList()
+        else emptyList()
 
         val stringPrivileges = extractClaims(token).get("privileges", String::class.java)
-        val privilegesArray = stringPrivileges?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
+        val privilegesArray = if(stringPrivileges.isNotBlank())
+            stringPrivileges?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
+        else emptyList()
 
         return rolesArray + privilegesArray
     }

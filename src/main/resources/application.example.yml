@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+app:
+  self:
+    base-url: "http://localhost:8080"
+  security:
+    jwt:
+      secret: "1fefe518b1d9ef91822eae8aac7925f4a6b0f59252a85e8f9bc4481a72775b18" # Change this value before going to production
+      expiration-time: 600000
+
+  users:
+    account-activation:
+      otp-expiration-time: 86400000 # 24 hours
+    password-reset:
+      otp-expiration-time: 86400000 # 24 hours
+
+  medias:
+    s3:
+      buckets:
+        - name:
+          region:
+
+    validation:
+      max-file-size: 40000000 # 40 MB

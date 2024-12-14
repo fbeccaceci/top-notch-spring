@@ -1,5 +1,6 @@
 package com.iplastudio.boilerplate.features.auditing
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
@@ -17,12 +18,12 @@ class Auditable {
 
     @CreatedBy
     @Column(updatable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     var createdBy: String? = null
 
     @CreatedDate
     @Column(updatable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     var createdAt: LocalDateTime? = null
 
     @LastModifiedBy
@@ -32,4 +33,12 @@ class Auditable {
     @LastModifiedDate
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var lastUpdatedAt: LocalDateTime? = null
+
+    @JsonProperty("createdBy", access = JsonProperty.Access.READ_ONLY)
+    fun jsonCreatedBy(): String = createdBy
+        ?: throw IllegalStateException("createdBy should not be null at serialization time")
+
+    @JsonProperty("createdAt", access = JsonProperty.Access.READ_ONLY)
+    fun jsonCreatedAt(): LocalDateTime = createdAt
+        ?: throw IllegalStateException("createdAt should not be null at serialization time")
 }

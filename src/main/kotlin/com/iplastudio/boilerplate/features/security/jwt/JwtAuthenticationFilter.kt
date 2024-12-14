@@ -34,7 +34,8 @@ class JwtAuthenticationFilter(
 
         try {
             val details = AuthenticationDetails(
-                username = jwtService.extractUsername(token)
+                username = jwtService.extractUsername(token),
+                userId = jwtService.extractUserId(token)
             )
 
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(

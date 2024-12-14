@@ -3,12 +3,19 @@ package com.iplastudio.boilerplate.features.medias
 import software.amazon.awssdk.core.ResponseInputStream
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.GetObjectResponse
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
 import java.time.Duration
+
+fun interface PutObjectRequestCustomizer {
+
+    fun customize(requestBuilder: PutObjectRequest.Builder)
+
+}
 
 
 class S3BucketService(bucketProperties: AppS3Bucket) {
@@ -28,12 +35,13 @@ class S3BucketService(bucketProperties: AppS3Bucket) {
      * Get pre-signed upload URL for the media, use this method to upload the media to S3 bucket
      * after checking if the user is authorized to upload the media
      */
-    fun getPreSignedUploadUrl(fileName: String, metadata: Map<String?, String?> = emptyMap()): String {
-        val objectRequest = PutObjectRequest.builder()
+    fun getPreSignedUploadUrl(customizer: PutObjectRequestCustomizer): String {
+        val objectRequestBuilder = PutObjectRequest.builder()
             .bucket(bucketName)
-            .key(fileName)
-            .metadata(metadata)
-            .build()
+
+        customizer.customize(objectRequestBuilder)
+
+        val objectRequest = objectRequestBuilder.build()
 
         val preSignRequest = PutObjectPresignRequest.builder()
             .signatureDuration(Duration.ofMinutes(10))
@@ -55,6 +63,15 @@ class S3BucketService(bucketProperties: AppS3Bucket) {
             .build()
 
         return s3Client.getObject(req)
+    }
+
+    fun deleteMedia(key: String) {
+        val req = DeleteObjectRequest.builder()
+            .bucket(bucketName)
+            .key(key)
+            .build()
+
+        s3Client.deleteObject(req)
     }
 
 }

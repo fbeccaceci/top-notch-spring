@@ -2,7 +2,7 @@ package com.iplastudio.boilerplate.features.users.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.iplastudio.boilerplate.features.auditing.Auditable
+import com.iplastudio.boilerplate.features.crud.BaseEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
@@ -24,11 +24,7 @@ class User(
     @field:JsonIgnore
     var locale: Locale = Locale.ENGLISH,
 
-    @Id
-    @GeneratedValue
-    @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    var id: UUID? = null
-): Auditable() {
+): BaseEntity() {
 
     @OneToMany(cascade = [CascadeType.REMOVE], orphanRemoval = true, mappedBy = "userId")
     private var otps: MutableSet<UserOtp> = mutableSetOf()

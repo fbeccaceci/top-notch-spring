@@ -1,3 +1,5 @@
 package com.iplastudio.boilerplate.features.security
 
-data class AuthenticationDetails(val username: String)
+import java.util.UUID
+
+data class AuthenticationDetails(val username: String, val userId: UUID)

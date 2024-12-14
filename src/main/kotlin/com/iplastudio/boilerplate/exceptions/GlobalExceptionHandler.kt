@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
@@ -97,5 +98,16 @@ class GlobalExceptionHandler {
         )
 
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler
+    fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException): ResponseEntity<ApiError> {
+        val error = ApiError(
+            error = "invalid-argument",
+            message = "Invalid argument",
+            details = e.message ?: ""
+        )
+
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
 }
